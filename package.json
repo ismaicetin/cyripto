@@ -11,13 +11,17 @@
 		"test": "node test.js"
 	},
 	"dependencies": {
+		"body-parser": "1.19.0",
+		"cctx": "^1.0.1",
+		"ccxt": "^1.43.37",
+		"coingecko-api": "^1.0.10",
+		"cors": "2.8.5",
+		"dotenv": "8.2.0",
 		"ejs": "^3.1.5",
 		"express": "^4.15.2",
-		"cors": "2.8.5",
-		"body-parser": "1.19.0",
 		"express-async-errors": "3.1.1",
-		"dotenv": "8.2.0",
-		"morgan-body": "2.4.14"
+		"morgan-body": "2.4.14",
+		"technicalindicators": "^3.1.0"
 	},
 	"devDependencies": {
 		"got": "^11.3.0",

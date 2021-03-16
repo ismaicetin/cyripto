@@ -13,7 +13,7 @@ const command = require("./command");
 const logErrors = require("./utils/logErrors");
 const errorHandler = require("./utils/errorHandler");
 // const dbConnection = require("./config/db");
-
+const tradingIndicator = require("./trading-indicator");
 var date = new Date();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit: "100mb" }));
@@ -34,8 +34,16 @@ var accessLogStream = fs.createWriteStream(
 // 	next();
 // });
 
+const deneme = async () => {
+	console.clear();
+	let data, category;
+	[data, category] = await tradingIndicator.rsi(14, "close", "binance", "BTC/USDT", "4h", true);
+	console.log("rsi", data, category);
+};
 app.use((req, res, next) => {
 	console.clear();
+	deneme();
+
 	next();
 });
 app.use(command.ResponseModify);
