@@ -43,7 +43,7 @@ app.use(command.ResponseModify);
 
 // API ENDPOINTS
 app.use("*", function (req, res) {
-	res.json({ status: "read" });
+	res.json({ status: "ismail çetin" });
 });
 
 // app.use("/api", require("./router"));
