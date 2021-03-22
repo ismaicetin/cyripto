@@ -43,7 +43,7 @@ const wsRun = async (ws) => {
 
 		if (data[data.length - 1] < 45) {
 			console.log(`${coinSymbol} Rsi`, data, category);
-			ws.send(`${JSON.stringify({ [coinSymbol]: data, lastDate: data[data.length - 1] })}`);
+			ws.send(`${JSON.stringify({ [coinSymbol]: { data, category } })}`);
 		}
 	}
 	// }
@@ -61,28 +61,27 @@ app.use((req, res, next) => {
 app.use(command.ResponseModify);
 
 // API ENDPOINTS
-app.use("*", async (req, res) => {
-	// console.log("exchanges", ccxt.exchanges);
+// app.use("*", async (req, res) => {
+// 	// console.log("exchanges", ccxt.exchanges);
 
-	// let data, category;
-	// [data, category] = await tradingIndicator.rsi(14, "close", "binance", "BTC/USDT", "4h", true);
-	// console.log("rsi", data);
-	// res.json({ data });
+// 	// let data, category;
+// 	// [data, category] = await tradingIndicator.rsi(14, "close", "binance", "BTC/USDT", "4h", true);
+// 	// console.log("rsi", data);
+// 	// res.json({ data });
 
-	res.json({ status: "ismail çetin" });
-});
-
-// app.use("/api", require("./router"));
-
-// app.get("/pdf/:id", function (req, res) {
-// 	res.sendFile(__dirname + `/pdf/${req.params.id}`);
+// 	res.json({ status: "ismail çetin" });
 // });
 
 // app.get("*", function (req, res) {
 // 	res.sendFile(__dirname + "/public/index.html");
 // });
 
-// app.use("/ddd", express.static("public"));
+const root = require("path").join(__dirname, "public");
+app.use(express.static(root));
+
+app.get("*", (req, res) => {
+	res.sendFile("index.html", { root });
+});
 
 app.use(logErrors);
 app.use(errorHandler);
