@@ -10,10 +10,10 @@ const rsi = async (rsiLength, sourceType, ex, ticker, interval, isFuture = false
 		let rsiInput = {
 			values: source[sourceType],
 			period: rsiLength,
+			// reversedInput: true,
 		};
-
 		let result = await indicators.RSI.calculate(rsiInput);
-		return [result, source.date];
+		return [result, source.date.slice(rsiLength)];
 	} catch (err) {
 		throw err;
 	}

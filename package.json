@@ -21,7 +21,8 @@
 		"express": "^4.15.2",
 		"express-async-errors": "3.1.1",
 		"morgan-body": "2.4.14",
-		"technicalindicators": "^3.1.0"
+		"technicalindicators": "^3.1.0",
+		"ws": "^7.4.4"
 	},
 	"devDependencies": {
 		"got": "^11.3.0",
