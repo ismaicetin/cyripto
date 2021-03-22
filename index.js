@@ -20,7 +20,7 @@ app.use(bodyParser.json({ limit: "100mb" }));
 app.use(cors());
 const ccxt = require("ccxt");
 var WebSocketServer = require("ws").Server,
-	wss = new WebSocketServer({ port: 8080 });
+	wss = new WebSocketServer({ app });
 
 // setInterval(() => wsRun(), 1000);
 
