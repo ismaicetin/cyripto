@@ -20,6 +20,7 @@
 		"ejs": "^3.1.5",
 		"express": "^4.15.2",
 		"express-async-errors": "3.1.1",
+		"express-ws": "^4.0.0",
 		"morgan-body": "2.4.14",
 		"technicalindicators": "^3.1.0",
 		"ws": "^7.4.4"

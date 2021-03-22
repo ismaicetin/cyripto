@@ -1,5 +1,5 @@
 ///definition
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 const express = require("express");
 const path = require("path");
@@ -19,10 +19,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(cors());
 const ccxt = require("ccxt");
-var WebSocketServer = require("ws").Server,
-	wss = new WebSocketServer({ app });
-
-// setInterval(() => wsRun(), 1000);
+const WSServer = require("express-ws")(app);
+const aWss = WSServer.getWss();
 
 const wsRun = async (ws) => {
 	let binance = new ccxt.binance();
@@ -48,14 +46,13 @@ const wsRun = async (ws) => {
 	}
 	// }
 };
-wss.on("connection", function (ws, req) {
-	console.clear();
+
+app.ws("/", (ws, req) => {
 	wsRun(ws);
 });
 
 app.use((req, res, next) => {
 	console.clear();
-
 	next();
 });
 app.use(command.ResponseModify);
