@@ -20,7 +20,9 @@ const getOHLCV = async (ex, ticker, interval, isFuture = false) => {
 		}
 		return await exchange.fetchOHLCV(ticker, interval);
 	} catch (err) {
-		throw "Ticker is not supported";
+		// throw "Ticker is not supported";
+		console.log(`${ex} =>${ticker} Ticker is not supported`);
+		return null;
 	}
 };
 // console.log(getOHLCV("binance", "BTC/USDT", "15m", true))

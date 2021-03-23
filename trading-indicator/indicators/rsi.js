@@ -5,6 +5,7 @@ const indicators = require("technicalindicators");
 const rsi = async (rsiLength, sourceType, ex, ticker, interval, isFuture = false) => {
 	try {
 		let ohlcv = await getOHLCV(ex, ticker, interval, isFuture);
+		if (!ohlcv) return [[], []];
 
 		let source = detachSource(ohlcv);
 		let rsiInput = {
