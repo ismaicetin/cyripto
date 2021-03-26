@@ -115,8 +115,14 @@ function App() {
 				// console.log(`${coinSymbol} Rsi`, data, category);
 				Tempdata = { ...Tempdata, [coinSymbol]: { data, category, curretCoinPrice, tahminiFiyat, yuzdeKazanc } };
 				// setcharData([...data, { [coinSymbol]: { data, category } }]);
+				console.log(
+					coinSymbol,
+					{ curretCoinPrice },
+					tahminiFiyat,
+					{ yuzdeKazanc: yuzdeKazanc.toFixed(2) },
+					{ rsi: data[data.length - 1] }
+				);
 				setcharData(Tempdata);
-				console.log(Tempdata);
 			}
 		}
 		// }
@@ -154,7 +160,7 @@ function App() {
 		let curretCoinPrice = symbol[symbol.length - 1][1];
 		let tahminiFiyat = (SatisEmirR + alisEmirR) / 2;
 		let yuzdeKazanc = (100 * (tahminiFiyat - curretCoinPrice)) / curretCoinPrice;
-		console.log(coin, { curretCoinPrice }, tahminiFiyat, { yuzdeKazanc: yuzdeKazanc.toFixed(2) });
+
 		return [coin, curretCoinPrice, tahminiFiyat, yuzdeKazanc];
 		// }
 	};
