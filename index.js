@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(cors());
 
-const root = require("path").join(__dirname, "Frontent/build");
+const root = require("path").join(__dirname, "frontent/build");
 app.use(express.static(root));
 
 app.get("*", (req, res) => {
