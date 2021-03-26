@@ -1,29 +1,33 @@
-const bb = require("./indicators/bollinger_band.js");
-const ema = require("./indicators/ema.js");
-const ichimokuCloud = require("./indicators/ichimoku.js");
-const macd = require("./indicators/macd.js");
-const mfi = require("./indicators/mfi.js");
-const obv = require("./indicators/obv.js");
-const rsi = require("./indicators/rsi.js");
-const sma = require("./indicators/sma.js");
-const stochasticRSI = require("./indicators/stochasticrsi.js");
-const ticker = require("./indicators/ticker.js");
-const wma = require("./indicators/wma.js");
-const alerts = require("./alerts/index.js");
-module.exports = {
-	alerts: alerts,
-	bb: bb,
-	ema: ema,
-	ichimokuCloud: ichimokuCloud,
-	macd: macd,
-	mfi: mfi,
-	obv: obv,
-	rsi: rsi,
-	sma: sma,
-	stochasticRSI: stochasticRSI,
-	ticker: ticker,
-	wma: wma,
-};
+// const bb = require("./indicators/bollinger_band.js");
+// const ema = require("./indicators/ema.js");
+// const ichimokuCloud = require("./indicators/ichimoku.js");
+// const macd = require("./indicators/macd.js");
+// const mfi = require("./indicators/mfi.js");
+// const obv = require("./indicators/obv.js");
+
+// const sma = require("./indicators/sma.js");
+// const stochasticRSI = require("./indicators/stochasticrsi.js");
+// const ticker = require("./indicators/ticker.js");
+// const wma = require("./indicators/wma.js");
+// const alerts = require("./alerts/index.js");
+import rsi from "./indicators/rsi.js";
+
+export { rsi };
+
+// export default {
+// 	// alerts: alerts,
+// 	// bb: bb,
+// 	// ema: ema,
+// 	// ichimokuCloud: ichimokuCloud,
+// 	// macd: macd,
+// 	// mfi: mfi,
+// 	// obv: obv,
+// 	// sma: sma,
+// 	// stochasticRSI: stochasticRSI,
+// 	// ticker: ticker,
+// 	// wma: wma,
+// 	rsi: rsi,
+// };
 
 // examples for testing
 const main = async () => {

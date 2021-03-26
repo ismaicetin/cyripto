@@ -1,7 +1,8 @@
-const getOHLCV = require("./ohlcv.js");
-const detachSource = require("./source.js");
+// const getOHLCV = require("./ohlcv.js");
+// const detachSource = require("./source.js");
+import getOHLCV from "./ohlcv.js";
+import detachSource from "./source.js";
 const indicators = require("technicalindicators");
-
 const rsi = async (rsiLength, sourceType, ex, ticker, interval, isFuture = false) => {
 	try {
 		let ohlcv = await getOHLCV(ex, ticker, interval, isFuture);
@@ -19,4 +20,4 @@ const rsi = async (rsiLength, sourceType, ex, ticker, interval, isFuture = false
 		throw err;
 	}
 };
-module.exports = rsi;
+export default rsi;

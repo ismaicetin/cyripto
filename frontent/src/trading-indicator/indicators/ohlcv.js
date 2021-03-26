@@ -1,4 +1,4 @@
-const ccxt = require("ccxt");
+import ccxt from "ccxt";
 
 const getOHLCV = async (ex, ticker, interval, isFuture = false) => {
 	if (!ccxt.exchanges.includes(ex)) {
@@ -26,4 +26,4 @@ const getOHLCV = async (ex, ticker, interval, isFuture = false) => {
 	}
 };
 // console.log(getOHLCV("binance", "BTC/USDT", "15m", true))
-module.exports = getOHLCV;
+export default getOHLCV;

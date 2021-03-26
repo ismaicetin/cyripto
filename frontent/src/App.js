@@ -2,75 +2,14 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import ccxt from "ccxt";
-// const tradingIndicator = require("./trading-indicator");
+import { rsi } from "./trading-indicator";
 import "./App.css";
 import DenemeChart from "./DenemeChart";
 const indicators = require("technicalindicators");
 
-const timeIndex = 0,
-	dIndex = 0,
-	oIndex = 1,
-	hIndex = 2,
-	lIndex = 3,
-	cIndex = 4,
-	vIndex = 5;
-
 function App() {
 	const [charData, setcharData] = useState([]);
 	let binance = new ccxt.binance();
-
-	const detachSource = (ohlcv) => {
-		let source = [];
-		source["date"] = [];
-		source["open"] = [];
-		source["high"] = [];
-		source["low"] = [];
-		source["close"] = [];
-		source["volume"] = [];
-		if (ohlcv.length == 0) {
-			return source;
-		}
-		ohlcv.forEach((data) => {
-			source["date"].push(data[dIndex]);
-			source["open"].push(data[oIndex]);
-			source["high"].push(data[hIndex]);
-			source["low"].push(data[lIndex]);
-			source["close"].push(data[cIndex]);
-			source["volume"].push(data[vIndex]);
-		});
-		return source;
-	};
-
-	const getOHLCV = async (ex, ticker, interval, isFuture = false) => {
-		if (!ccxt.exchanges.includes(ex)) {
-			throw "Exchange is not supported";
-		}
-		try {
-			return await binance.fetchOHLCV(ticker, interval);
-		} catch (err) {
-			return [];
-			throw "Ticker is not supported";
-		}
-	};
-
-	const rsi = async (rsiLength, sourceType, ex, ticker, interval, isFuture = false) => {
-		try {
-			let ohlcv = await getOHLCV(ex, ticker, interval, isFuture);
-			if (!ohlcv) return [[], []];
-
-			let source = detachSource(ohlcv);
-			let rsiInput = {
-				values: source[sourceType],
-				period: rsiLength,
-				// reversedInput: true,
-			};
-			let result = await indicators.RSI.calculate(rsiInput);
-
-			return [result, source.date.slice(rsiLength)];
-		} catch (err) {
-			throw err;
-		}
-	};
 
 	useEffect(() => {
 		// tahminPiyasa();
@@ -91,6 +30,8 @@ function App() {
 			)
 			.then(function (response) {
 				filteredSymbols = response.data.data.cryptoCurrencyList;
+				filteredSymbols = filteredSymbols.map((item) => `${item.symbol}/USDT`);
+
 				console.log({ filteredSymbols });
 			})
 			.catch(function (error) {
@@ -101,28 +42,17 @@ function App() {
 				// always executed
 			});
 
-		// filteredSymbols = ["ADA/USDT"];
-		let Tempdata = {};
-		for (let index = 0; index < filteredSymbols.length; index++) {
-			const item = filteredSymbols[index];
-			let coinSymbol = `${item.symbol}/USDT`;
+		// await axios.get("https://api.binance.com/api/v1/exchangeInfo").then(function (response) {
+		// 	filteredSymbols = response.data.data.symbols;
 
-			let [data, category] = await rsi(14, "close", "binance", coinSymbol, "4h", true);
+		// 	quoteAsset
 
-			if (data.length > 0) {
-				let [coin, curretCoinPrice, tahminiFiyat, yuzdeKazanc] = await tahminPiyasa(coinSymbol);
-				// console.log(`${coinSymbol} Rsi`, data, category);
-				Tempdata = { ...Tempdata, [coinSymbol]: { data, category, curretCoinPrice, tahminiFiyat, yuzdeKazanc } };
-				// setcharData([...data, { [coinSymbol]: { data, category } }]);
-				setcharData(Tempdata);
-				console.log(Tempdata);
-			}
-		}
-		// }
-	};
+		// 	filteredSymbols = filteredSymbols.map((item) => `${item.baseAsset}/USDT`);
 
-	const tahminPiyasa = async (coin) => {
-		let SelectCoin = [
+		// 	console.log({ filteredSymbols });
+		// });
+
+		filteredSymbols = [
 			"USDT/TRY",
 			"BUSD/TRY",
 			"ADA/TRY",
@@ -141,14 +71,57 @@ function App() {
 			"NEO/TRY",
 			"DOT/TRY",
 			"SXP/TRY",
+			"ATOM/USDT",
+			"LTC/USDT",
+			"AAVE/USDT",
+			"MKR/USDT",
+			"OMG/USDT",
+			"XTZ/USDT",
+			"WAVES/USDT",
 			"BAL/USDT",
 			"ONT/USDT",
 			"RVN/USDT",
 			"BAT/USDT",
-			"LINKDOWN/USDT",
-			"BCH/USDT",
+			"EOS/USDT",
 			"DOCOS/USDT",
+			"UNI/USDT",
+			"WAN/USDT",
+			"HBAR/USDT",
+			"IOTA/USDT",
+			"XEM/USDT",
+			"LINKDOWN/USDT",
+			"DGB/USDT",
+			"BNB/USDT",
+			"BCH/USDT",
+			"QTUM/USDT",
+			"NPXS/USDT",
+			"ANKR/USDT",
+			"RVN/USDT",
+			"TROY/USDT",
+			"ENJ/BNB",
+			"WIN/BNB",
+			"ONE/BNB",
 		];
+
+		let Tempdata = {};
+		for (let index = 0; index < filteredSymbols.length; index++) {
+			const coinSymbol = filteredSymbols[index];
+
+			let [data, category] = await rsi(14, "close", "binance", coinSymbol, "4h", true);
+
+			if (data.length > 0) {
+				let [coin, curretCoinPrice, tahminiFiyat, yuzdeKazanc] = await tahminPiyasa(coinSymbol);
+				// console.log(`${coinSymbol} Rsi`, data, category);
+				Tempdata = { ...Tempdata, [coinSymbol]: { data, category, curretCoinPrice, tahminiFiyat, yuzdeKazanc } };
+				// setcharData([...data, { [coinSymbol]: { data, category } }]);
+				setcharData(Tempdata);
+				console.log(Tempdata);
+			}
+		}
+		// }
+	};
+
+	const tahminPiyasa = async (coin) => {
 		// SelectCoin = ["ATOM/USDT"];
 
 		// for (let index = 0; index < SelectCoin.length; index++) {
@@ -260,11 +233,11 @@ function App() {
 										<DenemeChart
 											name={item}
 											subtitle={`<strong style="color:green"> ${charData[item].curretCoinPrice.toFixed(
-												2
+												4
 											)}</strong>  =>  <strong style="color:black">  ${charData[item].tahminiFiyat.toFixed(
-												2
+												4
 											)} </strong> <strong style="color:red"> (${charData[item].yuzdeKazanc.toFixed(
-												2
+												4
 											)}) </strong> `}
 											chartData={charData[item]}
 											sliceCount={10}

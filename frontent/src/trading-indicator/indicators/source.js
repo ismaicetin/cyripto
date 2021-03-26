@@ -26,4 +26,4 @@ const detachSource = (ohlcv) => {
 	});
 	return source;
 };
-module.exports = detachSource;
+export default detachSource;
