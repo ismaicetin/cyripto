@@ -141,7 +141,7 @@ function App() {
 							2
 						)} )  ===  ${curretCoinPrice}  =>  ${tahminiFiyat}  ,  Rsi : ${
 							data[data.length - 1]
-						} ,   satisEmirSayısi =  ${satisEmirSayısi}  ,  alisEmirSayısi = ${alisEmirSayısi}`
+						} ,    alisEmirSayısi = ${alisEmirSayısi} ,  satisEmirSayısi =  ${satisEmirSayısi}`
 					);
 
 					setcharData(Tempdata);
@@ -277,10 +277,10 @@ function App() {
 												4
 											)} </strong> <strong style="color:red"> (${charData[item].yuzdeKazanc.toFixed(
 												4
-											)}) </strong>  
-											
-											<strong style="color:blue"> ( ss:${charData[item].satisEmirSayısi} / as:${charData[item].alisEmirSayısi} ) </strong>  
-											 `}
+											)}) </strong>   
+											<strong style="color:blue"> (  as:${charData[item].alisEmirSayısi} / ss:${
+												charData[item].satisEmirSayısi
+											} ) </strong>  `}
 											chartData={charData[item]}
 											sliceCount={10}
 											debug
