@@ -1,36 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Highcharts from "highcharts";
+import { Button } from "react-bootstrap";
 
-const Bar = ({ chartData, sliceCount = 30, name, subtitle, backgroundColor }) => {
-	const getdate = (value) => {
-		let date = new Date(value);
-		var dateStr =
-			("00" + (date.getMonth() + 1)).slice(-2) +
-			"/" +
-			("00" + date.getDate()).slice(-2) +
-			"/" +
-			date.getFullYear() +
-			" " +
-			("00" + date.getHours()).slice(-2) +
-			":" +
-			("00" + date.getMinutes()).slice(-2) +
-			":" +
-			("00" + date.getSeconds()).slice(-2);
-		return dateStr;
-	};
+const getdate = (value) => {
+	let date = new Date(value);
+	var dateStr =
+		("00" + (date.getMonth() + 1)).slice(-2) +
+		"/" +
+		("00" + date.getDate()).slice(-2) +
+		"/" +
+		date.getFullYear() +
+		" " +
+		("00" + date.getHours()).slice(-2) +
+		":" +
+		("00" + date.getMinutes()).slice(-2) +
+		":" +
+		("00" + date.getSeconds()).slice(-2);
+	return dateStr;
+};
 
-	useEffect(() => {
-		Highcharts.chart(`container${name}`, {
-			chart: {
-				type: "line",
-			},
-			title: {
-				text: name,
-			},
-			subtitle: {
-				text: subtitle,
-			},
-			xAxis: {
+const useOptions = (chartData, sliceCount, name, subtitle, backgroundColor) => {
+	return {
+		chart: {
+			type: "line",
+			zoomType: "xy",
+			panning: true,
+		},
+		title: {
+			text: name,
+		},
+		subtitle: {
+			text: subtitle,
+		},
+		xAxis: [
+			{
 				categories: chartData.category.slice(chartData.category.length - sliceCount, chartData.category.length),
 				labels: {
 					formatter: function () {
@@ -38,7 +41,9 @@ const Bar = ({ chartData, sliceCount = 30, name, subtitle, backgroundColor }) =>
 					},
 				},
 			},
-			yAxis: {
+		],
+		yAxis: [
+			{
 				title: {
 					text: "Number of Employees",
 				},
@@ -77,29 +82,72 @@ const Bar = ({ chartData, sliceCount = 30, name, subtitle, backgroundColor }) =>
 					},
 				],
 			},
-			plotOptions: {
-				spline: {
-					marker: {
-						enable: false,
+			{
+				scrollbar: {
+					enabled: true,
+				},
+				// Secondary yAxis
+				title: {
+					text: "Tahmin",
+					style: {
+						color: Highcharts.getOptions().colors[0],
 					},
 				},
+				labels: {
+					format: "{value}",
+					style: {
+						color: Highcharts.getOptions().colors[0],
+					},
+				},
+				max: chartData.curretCoinPrice * 1.1,
+				min: chartData.curretCoinPrice - chartData.curretCoinPrice * 0.1,
+				opposite: true,
 			},
-			tooltip: {
-				formatter: function () {
-					return `${getdate(this.x)} : <strong style=" color: red; ">${this.y}</strong>`;
+		],
+		plotOptions: {
+			spline: {
+				marker: {
+					enable: false,
 				},
 			},
+		},
+		tooltip: {
+			formatter: function () {
+				return `${getdate(this.x)} : <strong style=" color: red; ">${this.y}</strong>`;
+			},
+		},
 
-			series: [
-				{
-					name: "Installation",
-					data: chartData.data.slice(chartData.category.length - sliceCount, chartData.category.length),
-				},
-			],
-		});
-	}, [name]);
-
-	return <div id={`container${name}`}></div>;
+		series: [
+			{
+				name: "Installation",
+				data: chartData.data.slice(chartData.category.length - sliceCount, chartData.category.length),
+			},
+			{
+				name: "tahminiFiyatArray",
+				yAxis: 1,
+				data: chartData.tahminiFiyatArray.slice(chartData.tahminiFiyatArray.length - sliceCount),
+			},
+		],
+	};
 };
 
-export default Bar;
+const HighchartsComponent = ({ options, debug, ...props }) => {
+	const containerRef = useRef(null);
+	const chartRef = useRef(null);
+
+	useEffect(() => {
+		chartRef.current = Highcharts.chart(containerRef.current, options);
+	}, []);
+
+	useEffect(() => {
+		if (debug) console.log("update options");
+		chartRef.current.update(options, true, true);
+	}, [chartRef, options]);
+
+	return <div ref={containerRef} {...props} />;
+};
+
+export default function Chart({ chartData, sliceCount = 30, name, subtitle, backgroundColor, debug }) {
+	const options = useOptions(chartData, sliceCount, name, subtitle, backgroundColor);
+	return <HighchartsComponent options={options} debug={debug} />;
+}

@@ -7,14 +7,16 @@ import "./App.css";
 import DenemeChart from "./DenemeChart";
 const indicators = require("technicalindicators");
 
+let Tempdata = {};
 function App() {
 	const [charData, setcharData] = useState([]);
+	const [repeat, setrepeat] = useState(0);
 	let binance = new ccxt.binance();
-
 	useEffect(() => {
 		// tahminPiyasa();
+
 		wsRun();
-	}, []);
+	}, [repeat]);
 
 	const wsRun = async (ws) => {
 		// while (true) {
@@ -24,23 +26,24 @@ function App() {
 		// let filteredSymbols = binance.symbols.filter((symbol) => /[a-zA-Z]\/USDT/gi.test(symbol));
 
 		let filteredSymbols = [];
-		await axios
-			.get(
-				"https://api.coinmarketcap.com/data-api/v3/cryptocurrency/listing?start=1&limit=300&sortBy=market_cap&sortType=desc&convert=USD,btc,eth&cryptoType=all&tagType=all&aux=ath,atl,high24h,low24h,num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,volume_7d,volume_30d"
-			)
-			.then(function (response) {
-				filteredSymbols = response.data.data.cryptoCurrencyList;
-				filteredSymbols = filteredSymbols.map((item) => `${item.symbol}/USDT`);
+		//TODO:top300 koin
+		// await axios
+		// 	.get(
+		// 		"https://api.coinmarketcap.com/data-api/v3/cryptocurrency/listing?start=1&limit=300&sortBy=market_cap&sortType=desc&convert=USD,btc,eth&cryptoType=all&tagType=all&aux=ath,atl,high24h,low24h,num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,volume_7d,volume_30d"
+		// 	)
+		// 	.then(function (response) {
+		// 		filteredSymbols = response.data.data.cryptoCurrencyList;
+		// 		filteredSymbols = filteredSymbols.map((item) => `${item.symbol}/USDT`);
 
-				console.log({ filteredSymbols });
-			})
-			.catch(function (error) {
-				// handle error
-				console.log(error);
-			})
-			.then(function () {
-				// always executed
-			});
+		// 		console.log({ filteredSymbols });
+		// 	})
+		// 	.catch(function (error) {
+		// 		// handle error
+		// 		console.log(error);
+		// 	})
+		// 	.then(function () {
+		// 		// always executed
+		// 	});
 
 		// await axios.get("https://api.binance.com/api/v1/exchangeInfo").then(function (response) {
 		// 	filteredSymbols = response.data.data.symbols;
@@ -81,7 +84,6 @@ function App() {
 			"AAVE/USDT",
 			"BCH/USDT",
 			"MKR/USDT",
-
 			"BTC/TRY",
 			"BNB/TRY",
 			"SXP/TRY",
@@ -104,7 +106,8 @@ function App() {
 			"ONE/BNB",
 		];
 
-		let Tempdata = {};
+		// filteredSymbols = ["HOT/TRY"];
+
 		for (let index = 0; index < filteredSymbols.length; index++) {
 			const coinSymbol = filteredSymbols[index];
 
@@ -125,6 +128,7 @@ function App() {
 					Tempdata = {
 						...Tempdata,
 						[coinSymbol]: {
+							...Tempdata[coinSymbol],
 							data,
 							category,
 							curretCoinPrice,
@@ -132,8 +136,11 @@ function App() {
 							yuzdeKazanc,
 							satisEmirSayısi,
 							alisEmirSayısi,
+							tahminiFiyatArray: Tempdata[coinSymbol]?.tahminiFiyatArray || [],
 						},
 					};
+					Tempdata[coinSymbol].tahminiFiyatArray.push(tahminiFiyat);
+
 					// setcharData([...data, { [coinSymbol]: { data, category } }]);
 
 					console.log(
@@ -150,6 +157,8 @@ function App() {
 				console.log(coinSymbol + "işlem yapılamadı" + error);
 			}
 		}
+
+		setrepeat(repeat + 1);
 		// }
 	};
 
@@ -283,7 +292,7 @@ function App() {
 											} ) </strong>  `}
 											chartData={charData[item]}
 											sliceCount={10}
-											debug
+											// debug
 										/>
 									</div>
 								</Col>
