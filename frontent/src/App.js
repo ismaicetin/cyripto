@@ -122,7 +122,18 @@ function App() {
 					] = await tahminPiyasa(coinSymbol);
 					// console.log(`${coinSymbol} Rsi`, data, category);
 
-					Tempdata = { ...Tempdata, [coinSymbol]: { data, category, curretCoinPrice, tahminiFiyat, yuzdeKazanc } };
+					Tempdata = {
+						...Tempdata,
+						[coinSymbol]: {
+							data,
+							category,
+							curretCoinPrice,
+							tahminiFiyat,
+							yuzdeKazanc,
+							satisEmirSayısi,
+							alisEmirSayısi,
+						},
+					};
 					// setcharData([...data, { [coinSymbol]: { data, category } }]);
 
 					console.log(
@@ -266,7 +277,10 @@ function App() {
 												4
 											)} </strong> <strong style="color:red"> (${charData[item].yuzdeKazanc.toFixed(
 												4
-											)}) </strong> `}
+											)}) </strong>  
+											
+											<strong style="color:blue"> ( ss:${charData[item].satisEmirSayısi} / as:${charData[item].alisEmirSayısi} ) </strong>  
+											 `}
 											chartData={charData[item]}
 											sliceCount={10}
 											debug
