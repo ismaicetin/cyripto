@@ -108,21 +108,35 @@ function App() {
 		for (let index = 0; index < filteredSymbols.length; index++) {
 			const coinSymbol = filteredSymbols[index];
 
-			let [data, category] = await rsi(14, "close", "binance", coinSymbol, "4h", true);
+			try {
+				let [data, category] = await rsi(14, "close", "binance", coinSymbol, "4h", true);
 
-			if (data.length > 0) {
-				let [coin, curretCoinPrice, tahminiFiyat, yuzdeKazanc] = await tahminPiyasa(coinSymbol);
-				// console.log(`${coinSymbol} Rsi`, data, category);
-				Tempdata = { ...Tempdata, [coinSymbol]: { data, category, curretCoinPrice, tahminiFiyat, yuzdeKazanc } };
-				// setcharData([...data, { [coinSymbol]: { data, category } }]);
-				console.log(
-					coinSymbol,
-					{ curretCoinPrice },
-					tahminiFiyat,
-					{ yuzdeKazanc: yuzdeKazanc.toFixed(2) },
-					{ rsi: data[data.length - 1] }
-				);
-				setcharData(Tempdata);
+				if (data.length > 0) {
+					let [
+						coin,
+						curretCoinPrice,
+						tahminiFiyat,
+						yuzdeKazanc,
+						satisEmirSayısi,
+						alisEmirSayısi,
+					] = await tahminPiyasa(coinSymbol);
+					// console.log(`${coinSymbol} Rsi`, data, category);
+
+					Tempdata = { ...Tempdata, [coinSymbol]: { data, category, curretCoinPrice, tahminiFiyat, yuzdeKazanc } };
+					// setcharData([...data, { [coinSymbol]: { data, category } }]);
+
+					console.log(
+						`${coinSymbol} ==   ( ${yuzdeKazanc.toFixed(
+							2
+						)} )  ===  ${curretCoinPrice}  =>  ${tahminiFiyat}  ,  Rsi : ${
+							data[data.length - 1]
+						} ,   satisEmirSayısi =  ${satisEmirSayısi}  ,  alisEmirSayısi = ${alisEmirSayısi}`
+					);
+
+					setcharData(Tempdata);
+				}
+			} catch (error) {
+				console.log(coinSymbol + "işlem yapılamadı" + error);
 			}
 		}
 		// }
@@ -133,9 +147,15 @@ function App() {
 
 		// for (let index = 0; index < SelectCoin.length; index++) {
 		// const coin = SelectCoin[index];
+		// if (coin == "CHZ/TRY") {
+		// 	debugger;
+		// }
 		let symbol = await binance.fetchOHLCV(coin, "1m");
+		let curretCoinPrice = symbol[symbol.length - 1][1];
+
 		let fetchOrderBooks = await binance.fetchOrderBook(coin, 5000);
-		let SatisEmir = fetchOrderBooks.asks.reduce(
+
+		let SatisEmir = fetchOrderBooks.asks.slice(0, fetchOrderBooks.asks.length * 0.8).reduce(
 			(result, currentValue, currentIndex, arr) => {
 				result.total = result.total + currentValue[0] * currentValue[1];
 				result.adet = result.adet + currentValue[1];
@@ -145,7 +165,7 @@ function App() {
 			{ total: 0, adet: 0 }
 		);
 
-		let alisEmri = fetchOrderBooks.bids.reduce(
+		let alisEmri = fetchOrderBooks.bids.slice(0, fetchOrderBooks.bids.length * 0.8).reduce(
 			(result, currentValue, currentIndex, arr) => {
 				result.total = result.total + currentValue[0] * currentValue[1];
 				result.adet = result.adet + currentValue[1];
@@ -157,11 +177,12 @@ function App() {
 
 		let SatisEmirR = SatisEmir.total / SatisEmir.adet;
 		let alisEmirR = alisEmri.total / alisEmri.adet;
-		let curretCoinPrice = symbol[symbol.length - 1][1];
 		let tahminiFiyat = (SatisEmirR + alisEmirR) / 2;
 		let yuzdeKazanc = (100 * (tahminiFiyat - curretCoinPrice)) / curretCoinPrice;
+		let satisEmirSayısi = fetchOrderBooks.asks.length * 0.8;
+		let alisEmirSayısi = fetchOrderBooks.bids.length * 0.8;
 
-		return [coin, curretCoinPrice, tahminiFiyat, yuzdeKazanc];
+		return [coin, curretCoinPrice, tahminiFiyat, yuzdeKazanc, satisEmirSayısi.toFixed(0), alisEmirSayısi.toFixed(0)];
 		// }
 	};
 
