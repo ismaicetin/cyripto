@@ -102,6 +102,36 @@ const useOptions = (chartData, sliceCount, name, subtitle, backgroundColor) => {
 				// max: chartData.curretCoinPrice * 1.1,
 				// min: chartData.curretCoinPrice - chartData.curretCoinPrice * 0.1,
 				opposite: true,
+				max: (Math.max(chartData.curretCoinPrice, chartData.tahminiFiyat) * 1.1).toFixed(4),
+				min: (Math.max(chartData.curretCoinPrice, chartData.tahminiFiyat) * 0.9).toFixed(4),
+				plotLines: [
+					{
+						color: "green",
+						width: 2,
+						value: chartData.curretCoinPrice,
+						label: {
+							align: "right",
+							style: {
+								fontStyle: "italic",
+							},
+							text: "Gecerli Fiyat",
+							x: -10,
+						},
+					},
+					{
+						color: "black",
+						width: 2,
+						value: chartData.tahminiFiyat,
+						label: {
+							align: "right",
+							style: {
+								fontStyle: "italic",
+							},
+							text: "tahmini Fiyat",
+							x: -10,
+						},
+					},
+				],
 			},
 		],
 		plotOptions: {
@@ -122,11 +152,11 @@ const useOptions = (chartData, sliceCount, name, subtitle, backgroundColor) => {
 				name: "Installation",
 				data: chartData.data.slice(chartData.category.length - sliceCount, chartData.category.length),
 			},
-			{
-				name: "tahminiFiyatArray",
-				yAxis: 1,
-				data: chartData.tahminiFiyatArray.slice(chartData.tahminiFiyatArray.length - sliceCount),
-			},
+			// {
+			// 	name: "tahminiFiyatArray",
+			// 	yAxis: 1,
+			// 	data: chartData.tahminiFiyatArray.slice(chartData.tahminiFiyatArray.length - sliceCount),
+			// },
 		],
 	};
 };

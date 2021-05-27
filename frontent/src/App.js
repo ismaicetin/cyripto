@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Form, InputGroup, FormControl, Button } from "react-bootstrap";
 import axios from "axios";
 import ccxt from "ccxt";
 import { rsi } from "./trading-indicator";
@@ -11,12 +11,16 @@ let Tempdata = {};
 function App() {
 	const [charData, setcharData] = useState([]);
 	const [repeat, setrepeat] = useState(0);
+	const [inputcustomCoinList, setinputcustomCoinList] = useState("");
+
+	const [selectedCoin, setselectedCoin] = useState("HOT/TRY");
+
 	let binance = new ccxt.binance();
 	useEffect(() => {
 		// tahminPiyasa();
 
 		wsRun();
-	}, [repeat]);
+	}, [repeat, selectedCoin]);
 
 	const wsRun = async (ws) => {
 		// while (true) {
@@ -56,57 +60,68 @@ function App() {
 		// });
 
 		filteredSymbols = [
-			"USDT/TRY",
-			"BUSD/TRY",
-			"HOT/TRY",
-			"CHZ/TRY",
-			"BTT/TRY",
-			"WAVES/USDT",
-			"ADA/TRY",
-			"TRX/TRY",
-			"RVN/USDT",
-			"XRP/TRY",
-			"AVAX/TRY",
-			"ONT/USDT",
-			"BAT/USDT",
-			"ETH/TRY",
-			"DOGE/TRY",
-			"XLM/TRY",
-			"EOS/USDT",
-			"DOT/TRY",
-			"UNI/USDT",
-			"LINK/TRY",
-			"BAL/USDT",
-			"NEO/TRY",
-			"XTZ/USDT",
-			"ATOM/USDT",
-			"LTC/USDT",
-			"AAVE/USDT",
-			"BCH/USDT",
-			"MKR/USDT",
-			"BTC/TRY",
-			"BNB/TRY",
-			"SXP/TRY",
-			"OMG/USDT",
-			"DOCOS/USDT",
-			"WAN/USDT",
-			"HBAR/USDT",
-			"IOTA/USDT",
+			"EGLD/USDT",
+			"ALICE/USDT",
+			"MDT/USDT",
 			"XEM/USDT",
-			"LINKDOWN/USDT",
-			"DGB/USDT",
-			"BNB/USDT",
-			"QTUM/USDT",
-			"NPXS/USDT",
-			"ANKR/USDT",
-			"RVN/USDT",
-			"TROY/USDT",
-			"ENJ/BNB",
-			"WIN/BNB",
-			"ONE/BNB",
-		];
+			"REN/USDT",
+			"1INCH/USDT",
+			"SXP/USDT",
+			"TWT/USDT",
+			"GHST/ETH",
+			"NEO/USDT",
+			"IOTA/USDT",
+			"BURGER/BNB",
 
-		// filteredSymbols = ["HOT/TRY"];
+			// 	"USDT/TRY",
+			// 	"BUSD/TRY",
+			// 	"HOT/TRY",
+			// 	"CHZ/TRY",
+			// 	"BTT/TRY",
+			// 	"WAVES/USDT",
+			// 	"ADA/TRY",
+			// 	"TRX/TRY",
+			// 	"RVN/USDT",
+			// 	"XRP/TRY",
+			// 	"AVAX/TRY",
+			// 	"ONT/USDT",
+			// 	"BAT/USDT",
+			// 	"ETH/TRY",
+			// 	"DOGE/TRY",
+			// 	"XLM/TRY",
+			// 	"EOS/USDT",
+			// 	"DOT/TRY",
+			// 	"UNI/USDT",
+			// 	"LINK/TRY",
+			// 	"BAL/USDT",
+			// 	"NEO/TRY",
+			// 	"XTZ/USDT",
+			// 	"ATOM/USDT",
+			// 	"LTC/USDT",
+			// 	"AAVE/USDT",
+			// 	"BCH/USDT",
+			// 	"MKR/USDT",
+			// 	"BTC/TRY",
+			// 	"BNB/TRY",
+			// 	"SXP/TRY",
+			// 	"OMG/USDT",
+			// 	"DOCOS/USDT",
+			// 	"WAN/USDT",
+			// 	"HBAR/USDT",
+			// 	"IOTA/USDT",
+			// 	"XEM/USDT",
+			// 	"LINKDOWN/USDT",
+			// 	"DGB/USDT",
+			// 	"BNB/USDT",
+			// 	"QTUM/USDT",
+			// 	"NPXS/USDT",
+			// 	"ANKR/USDT",
+			// 	"RVN/USDT",
+			// 	"TROY/USDT",
+			// 	"ENJ/BNB",
+			// 	"WIN/BNB",
+			// 	"ONE/BNB",
+		];
 
 		for (let index = 0; index < filteredSymbols.length; index++) {
 			const coinSymbol = filteredSymbols[index];
@@ -144,11 +159,9 @@ function App() {
 					// setcharData([...data, { [coinSymbol]: { data, category } }]);
 
 					console.log(
-						`${coinSymbol} ==   ( ${yuzdeKazanc.toFixed(
+						`(Rsi : ${data[data.length - 1]}%) ${coinSymbol} ==\t(yuzdeKazanc: ${yuzdeKazanc.toFixed(
 							2
-						)} )  ===  ${curretCoinPrice}  =>  ${tahminiFiyat}  ,  Rsi : ${
-							data[data.length - 1]
-						} ,    alisEmirSayısi = ${alisEmirSayısi} ,  satisEmirSayısi =  ${satisEmirSayısi}`
+						)} %)  ===  ${curretCoinPrice}  =>\t${tahminiFiyat},\t alisEmirSayısi = ${alisEmirSayısi} ,\t satisEmirSayısi =  ${satisEmirSayısi}`
 					);
 
 					setcharData(Tempdata);
@@ -271,12 +284,60 @@ function App() {
 		<div className="App">
 			<div className="App-header">
 				<h2>ismail Çetin CYRIPTO</h2>
+				<Form>
+					<Form.Row className="align-items-center">
+						<Col xs="auto">
+							<Form.Label htmlFor="inlineFormInput" srOnly>
+								Koin İsmi
+							</Form.Label>
+							<Form.Control
+								className="mb-2"
+								id="inlineFormInput"
+								placeholder="HOT/TRY"
+								onChange={(e) => {
+									if (e.target.value) setinputcustomCoinList(e.target.value);
+									else {
+										setselectedCoin("");
 
+										setcharData([]);
+									}
+								}}
+							/>
+						</Col>
+						{/* <Col xs="auto">
+							<Form.Label htmlFor="inlineFormInputGroup" srOnly>
+								Username
+							</Form.Label>
+							<InputGroup className="mb-2">
+								<InputGroup.Prepend>
+									<InputGroup.Text>@</InputGroup.Text>
+								</InputGroup.Prepend>
+								<FormControl id="inlineFormInputGroup" placeholder="Username" />
+							</InputGroup>
+						</Col>  */}
+						<Col xs="auto">
+							{inputcustomCoinList && (
+								<Button
+									className="mb-2"
+									onClick={() => {
+										setselectedCoin("stop");
+										// if (inputcustomCoinList) {
+										// 	setselectedCoin(inputcustomCoinList);
+
+										// 	setcharData([]);
+										// }
+									}}>
+									Submit
+								</Button>
+							)}
+						</Col>
+					</Form.Row>
+				</Form>
 				<Container>
 					<Row>
 						{Object.keys(charData).map((item) => {
 							return (
-								<Col key={item} xs={12} md={4}>
+								<Col key={item} xs={12} lg={4}>
 									<div style={{ paddingBottom: 15 }}>
 										<DenemeChart
 											name={item}
